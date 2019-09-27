@@ -1,8 +1,8 @@
-package tech.blur.hacktemplate.presentation
+package tech.blur.trasher.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.hacktemplate.R
+import tech.blur.trasher.R
 
 class MainActivity : AppCompatActivity() {
 

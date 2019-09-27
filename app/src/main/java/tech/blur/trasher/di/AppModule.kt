@@ -1,4 +1,4 @@
-package tech.blur.hacktemplate.di
+package tech.blur.trasher.di
 
 import org.koin.dsl.module
 
