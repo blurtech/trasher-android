@@ -58,12 +58,12 @@ class LoginFragment: BaseFragment(){
         binding.buttonSignup
             .clicks()
             .subscribe{
-                findNavController().navigate(R.id.registrationFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
             }.addTo(compositeDisposable)
 
         loginViewModel.loginResult.observeNonNull(this){
             if (it == LoginViewModel.LoginResult.SUCCESS){
-                Toast.makeText(activity,"nice", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
             }
         }
 

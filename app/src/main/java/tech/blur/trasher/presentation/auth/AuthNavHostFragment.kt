@@ -1,11 +1,11 @@
-package tech.blur.trasher.presentation
+package tech.blur.trasher.presentation.auth
 
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import tech.blur.trasher.R
 import tech.blur.trasher.presentation.view.SupportBackStack
 
-class TrasherNavHostFragment : NavHostFragment(), SupportBackStack {
+class AuthNavHostFragment: NavHostFragment(), SupportBackStack {
     var onBackPressed: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

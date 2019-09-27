@@ -3,18 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_app"
-    tools:ignore="UnusedNavigation"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/mapFragment"
+    tools:ignore="UnusedNavigation">
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="tech.blur.trasher.presentation.map.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/registrationFragment"
         android:name="tech.blur.trasher.presentation.auth.RegistrationFragment"
-        android:label="RegistrationFragment" />
+        android:label="RegistrationFragment"
+        tools:layout="@layout/fragment_registration">
+        <action
+            android:id="@+id/action_registrationFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="tech.blur.trasher.presentation.auth.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 </navigation>
