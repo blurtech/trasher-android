@@ -1,6 +1,6 @@
 package tech.blur.trasher.domain
 
 data class Token (
-    val type: String = "Bearer",
-    val token: String
+    val token: String,
+    val type: String = "Bearer"
 )
