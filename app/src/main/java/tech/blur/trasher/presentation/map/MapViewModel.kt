@@ -18,10 +18,10 @@ import tech.blur.trasher.presentation.BaseViewModel
 class MapViewModel(
     api: TrasherApi,
     schedulerProvider: SchedulerProvider,
-    trashRepository: TrashRepository
+    private val trashRepository: TrashRepository
 ) : BaseViewModel() {
 
-    val loadTrashcans = PublishSubject.create<Unit>()
+    private val loadTrashcans = PublishSubject.create<Unit>()
 
     private val mutableNetworkProgress = MutableLiveData<Boolean>()
     val networkProgress: LiveData<Boolean> = mutableNetworkProgress
@@ -62,7 +62,14 @@ class MapViewModel(
 
                 mutableNetworkProgress.value = false
             }.addTo(compositeDisposable)
+    }
 
+    fun loadTrashcans() {
+        if (trashRepository.isTrashCansCahsAvailable) {
+            mutableTrashcans.value = trashRepository.trashCans.list
+        } else {
+            loadTrashcans.onNext(Unit)
+        }
     }
 
 

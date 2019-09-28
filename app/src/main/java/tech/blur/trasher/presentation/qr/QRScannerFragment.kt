@@ -13,6 +13,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView
 import org.koin.android.ext.android.inject
 import tech.blur.trasher.R
 import tech.blur.trasher.UserSession
+import tech.blur.trasher.domain.Parcel
 import tech.blur.trasher.domain.TrashcanInfo
 import tech.blur.trasher.presentation.BaseFragment
 import tech.blur.trasher.presentation.view.SupportNavigationHide
@@ -58,36 +59,6 @@ class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Suppor
         setHasOptionsMenu(true)
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        super.onCreateOptionsMenu(menu, inflater)
-//
-//        val menuItem: MenuItem
-//
-//        if (mFlash) {
-//            menuItem = menu.add(Menu.NONE, R.id.menu_flash, 0, R.string.flash_on)
-//        } else {
-//            menuItem = menu.add(Menu.NONE, R.id.menu_flash, 0, R.string.flash_off)
-//        }
-//        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_NEVER)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        // Handle presses on the action bar items
-//        when (item.itemId) {
-//            R.id.menu_flash -> {
-//                mFlash = !mFlash
-//                if (mFlash) {
-//                    item.setTitle(R.string.flash_on)
-//                } else {
-//                    item.setTitle(R.string.flash_off)
-//                }
-//                mScannerView!!.flash = mFlash
-//                return true
-//            }
-//            else -> return super.onOptionsItemSelected(item)
-//        }
-//    }
-
     override fun onResume() {
         super.onResume()
         mScannerView!!.setResultHandler(this)
@@ -111,10 +82,15 @@ class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Suppor
                 userSession.qrCodeCanData(result)
                 findNavController().navigate(R.id.action_qrScannerFragment_to_trashEjectionFragment)
             }
-            rawResult.text.contains("bagType") -> {
-                val result = Gson().fromJson(rawResult.text, TrashcanInfo::class.java)
-                userSession.qrCodeCanData(result)
-
+            rawResult.text.contains("parcelId") -> {
+                val result = Gson().fromJson(rawResult.text, Parcel::class.java)
+//                userSession.qrCodeCanData(result)
+                val dialog = AlertDialog.Builder(context!!)
+                dialog.setMessage("Вы отсканировали пакет!")
+                    .setPositiveButton("Ok") { _, _ ->
+                        findNavController().popBackStack()
+                    }
+                dialog.show()
             }
             else -> {
                 val dialog = AlertDialog.Builder(context!!)
@@ -123,7 +99,6 @@ class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Suppor
                         findNavController().popBackStack()
                     }
                 dialog.show()
-
             }
         }
     }

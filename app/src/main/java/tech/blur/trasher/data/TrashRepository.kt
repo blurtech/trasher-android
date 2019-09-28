@@ -19,4 +19,15 @@ class TrashRepository(
             Trashlist::class.java
         )
 
+    val isTrashCansCahsAvailable: Boolean
+        get() {
+            return sharedPreferences.getString(::trashCans.name, null) != null
+        }
+
+    fun clean() {
+        sharedPreferences.edit()
+            .clear()
+            .apply()
+    }
+
 }

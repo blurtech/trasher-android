@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             frameLayout_mainActivity_navHostContainer.layoutParams as CoordinatorLayout.LayoutParams
 
         if (hide) {
-            p.setMargins(0, 0, 0, 56)
+            p.setMargins(0, 0, 0, 0)
             bottomAppBar_mainActivity.visibility = View.GONE
             fab_activityMain.hide()
         } else {

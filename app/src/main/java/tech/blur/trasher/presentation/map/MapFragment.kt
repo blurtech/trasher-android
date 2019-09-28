@@ -73,7 +73,7 @@ class MapFragment : BaseFragment(),
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map_mapFragment) as SupportMapFragment
 
-        mapViewModel.loadTrashcans.onNext(Unit)
+        mapViewModel.loadTrashcans()
         mapFragment.getMapAsync(this)
 
         googleApiClient = GoogleApiClient.Builder(context!!)
