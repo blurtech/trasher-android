@@ -32,12 +32,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(bottomAppBar_mainActivity)
 
         if (!accountRepository.isUserLoggedIn) {
-            navHost_mainActivity.findNavController().navigate(R.id.action_mapFragment_to_loginFragment)
+            navHost_mainActivity.findNavController()
+                .navigate(R.id.action_mapFragment_to_loginFragment)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId){
+        when (item.itemId) {
             android.R.id.home -> {
                 val bottomNavDrawerFragment = BottomNavigationDrawerFragment()
                 bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
@@ -53,20 +54,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideNavBar(hide: Boolean) {
-        val p = frameLayout_mainActivity_navHostContainer.layoutParams as CoordinatorLayout.LayoutParams
+        val p =
+            frameLayout_mainActivity_navHostContainer.layoutParams as CoordinatorLayout.LayoutParams
 
-        bottomAppBar_mainActivity.visibility = if (hide) {
-            p.setMargins(0,0,0, 56)
-            View.GONE
+        if (hide) {
+            p.setMargins(0, 0, 0, 56)
+            bottomAppBar_mainActivity.visibility = View.GONE
+            fab_activityMain.hide()
         } else {
-            p.setMargins(0,0,0, 56)
-            View.VISIBLE
+            p.setMargins(0, 0, 0, 56)
+            bottomAppBar_mainActivity.visibility = View.VISIBLE
+            fab_activityMain.show()
         }
 
         frameLayout_mainActivity_navHostContainer.layoutParams = p
-
-
-
 
 
     }
