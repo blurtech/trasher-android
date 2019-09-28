@@ -1,21 +1,20 @@
 package tech.blur.trasher.presentation.qr
 
-import android.media.RingtoneManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
-import androidx.navigation.Navigator
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 import org.koin.android.ext.android.inject
 import tech.blur.trasher.R
 import tech.blur.trasher.UserSession
+import tech.blur.trasher.domain.TrashcanInfo
 import tech.blur.trasher.presentation.BaseFragment
-import tech.blur.trasher.presentation.trashEjection.TrashEjectionFragment
 import tech.blur.trasher.presentation.view.SupportNavigationHide
 import java.util.*
 
@@ -29,6 +28,8 @@ class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Suppor
     private var mCameraId = -1
 
     private val userSession: UserSession by inject()
+
+    private val qrScanerViewModel: QRScanerViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,9 +105,27 @@ class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Suppor
     }
 
     override fun handleResult(rawResult: Result) {
-        userSession.qrCodeData(rawResult.text)
+        when {
+            rawResult.text.contains("canType") -> {
+                val result = Gson().fromJson(rawResult.text, TrashcanInfo::class.java)
+                userSession.qrCodeCanData(result)
+                findNavController().navigate(R.id.action_qrScannerFragment_to_trashEjectionFragment)
+            }
+            rawResult.text.contains("bagType") -> {
+                val result = Gson().fromJson(rawResult.text, TrashcanInfo::class.java)
+                userSession.qrCodeCanData(result)
 
-//        findNavController().navigate(R.id.action_qrScannerFragment_to_trashEjectionFragment, Bundle().putString("QRString",rawResult.text))
+            }
+            else -> {
+                val dialog = AlertDialog.Builder(context!!)
+                dialog.setMessage("Это не похоже на QR код мусорки или пакета")
+                    .setPositiveButton("Ok") { _, _ ->
+                        findNavController().popBackStack()
+                    }
+                dialog.show()
+
+            }
+        }
     }
 
     private fun setupFormats() {

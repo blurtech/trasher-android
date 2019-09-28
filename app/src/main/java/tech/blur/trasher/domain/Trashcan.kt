@@ -17,10 +17,8 @@ data class Place(val city: String, val region: String)
 data class Trashlist(val list: List<Trashcan>)
 
 data class TrashcanInfo(
-    val type: Int,
-    val count: Int,
-    val id: String,
-    val tag: String
+    val canType: Int,
+    val id: String
 )
 
 enum class TrashcanType(id: Int){

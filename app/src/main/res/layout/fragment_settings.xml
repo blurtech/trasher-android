@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data />
 
@@ -8,8 +9,33 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/appBarLayout">
+
+            <androidx.appcompat.widget.Toolbar
+                style="@style/TrasherTheme.ToolBar"
+                app:titleTextColor="#ffffff"
+                android:id="@+id/signup_trip_tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:title="Настройки">
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <Button
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/TrasherTheme.SettingsButtons"
+            android:id="@+id/button_settings_cleanCachedTrashcans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Отчистить кэш" />
+
+
+        <Button
+            style="@style/TrasherTheme.SettingsButtons"
             android:id="@+id/button_settings_Signout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

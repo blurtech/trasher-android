@@ -2,12 +2,13 @@ package tech.blur.trasher
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import tech.blur.trasher.domain.TrashcanInfo
 
 class UserSession {
-    private val qrCodeDataSubject = BehaviorSubject.create<String>()
+    private val qrCodeCanDataSubject = BehaviorSubject.create<TrashcanInfo>()
 
-    fun qrCodeDataObservable(): Observable<String> = qrCodeDataSubject
-    fun qrCodeData(value: String){
-        qrCodeDataSubject.onNext(value)
+    fun qrCodeCanDataObservable(): Observable<TrashcanInfo> = qrCodeCanDataSubject
+    fun qrCodeCanData(value: TrashcanInfo){
+        qrCodeCanDataSubject.onNext(value)
     }
 }

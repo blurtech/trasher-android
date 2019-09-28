@@ -1,16 +1,12 @@
 package tech.blur.trasher.presentation.trashEjection
 
-import android.graphics.Color
-import android.util.SparseArray
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import io.reactivex.Single
-import io.reactivex.SingleSource
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.PublishSubject
-import retrofit2.HttpException
 import tech.blur.trasher.UserSession
 import tech.blur.trasher.common.Result
 import tech.blur.trasher.common.rx.SchedulerProvider
@@ -21,11 +17,11 @@ import tech.blur.trasher.domain.EjectTrashRequest
 import tech.blur.trasher.domain.TrashcanInfo
 import tech.blur.trasher.domain.TrashcanType
 import tech.blur.trasher.presentation.BaseViewModel
-import tech.blur.trasher.presentation.auth.LoginViewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TrashEjectionViewModel(
-    val userSession: UserSession,
+    userSession: UserSession,
     api: TrasherApi,
     schedulerProvider: SchedulerProvider
 ) : BaseViewModel() {
@@ -35,28 +31,30 @@ class TrashEjectionViewModel(
     private val mutableNetworkProgress = MutableLiveData<Boolean>()
     val networkProgress: LiveData<Boolean> = mutableNetworkProgress
 
+    private val mutableErrorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = mutableErrorMessage
+
     private val mutableEjectResult = MutableLiveData<Boolean>()
     val ejectResult: LiveData<Boolean> = mutableEjectResult
 
-    private val mutableErrorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = mutableErrorMessage
+    private val mutableCanType = MutableLiveData<String>()
+    val canType: LiveData<String> = mutableCanType
 
 
     var trashType: String = ""
 
     init {
         ejectTrash
-            .withLatestFrom(userSession.qrCodeDataObservable())
+            .withLatestFrom(userSession.qrCodeCanDataObservable())
             .flatMapSingle {
-                val trashcanInfo = Gson().fromJson(it.second, TrashcanInfo::class.java)
-                val types = SparseArray<Count>()
-                types.put(trashcanInfo.type, Count(-1, it.first))
-                Single.just(EjectTrashRequest(trashcanInfo.id, types))
+                val types = ArrayList<Count>()
+                types.add(Count(it.second.canType, -1, it.first))
+                Single.just(EjectTrashRequest(it.second.id, types))
             }
             .flatMapSingle {
                 api.ejectTrash(it).toResult()
             }
-            .subscribeOn(schedulerProvider.ui())
+            .observeOn(schedulerProvider.ui())
             .subscribe {
                 when (it) {
                     is Result.Success -> {
@@ -70,10 +68,11 @@ class TrashEjectionViewModel(
                 }
             }.addTo(compositeDisposable)
 
-        userSession.qrCodeDataObservable()
+        userSession.qrCodeCanDataObservable()
             .subscribe {
-                val trashcanInfo = Gson().fromJson(it, TrashcanInfo::class.java)
-                trashType = TrashcanType.values()[trashcanInfo.type].name.toLowerCase(Locale.getDefault()).capitalize()
+                trashType = TrashcanType.values()[it.canType].name.toLowerCase(Locale.getDefault())
+                    .capitalize()
+                mutableCanType.value = trashType
             }.addTo(compositeDisposable)
     }
 }

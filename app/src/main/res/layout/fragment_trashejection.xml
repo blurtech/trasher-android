@@ -30,7 +30,7 @@
                 android:layout_margin="16dp">
 
                 <LinearLayout
-                    android:id="@+id/linearLayout2"
+                    android:id="@+id/linearLayout_ejectTrash"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -39,6 +39,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/textView_ejectTrash_canType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -60,7 +61,7 @@
                         android:textSize="20sp" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textinput_signin_password"
+                        android:id="@+id/textinput_ejectTrash"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,7 +72,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edit_signin_password"
+                            android:id="@+id/editText_ejectTrash"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ems="2"

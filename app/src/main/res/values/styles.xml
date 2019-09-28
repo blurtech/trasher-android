@@ -9,11 +9,16 @@
     </style>
 
     <style name="TrasherTheme.ToolBar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:titleTextColor">#9A000000</item>
+        <item name="android:titleTextColor">@color/colorAccent</item>
     </style>
 
     <style name="TrasherTheme.AppBar">
         <item name="android:backgroundTint">@color/colorPrimary</item>
     </style>
 
+    <style name="TrasherTheme.SettingsButtons" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
 </resources>
