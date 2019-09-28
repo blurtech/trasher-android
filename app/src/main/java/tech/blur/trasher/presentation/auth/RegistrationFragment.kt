@@ -18,7 +18,9 @@ import tech.blur.trasher.databinding.FragmentRegistrationBinding
 import tech.blur.trasher.presentation.BaseFragment
 
 class RegistrationFragment: BaseFragment() {
-    val registrationViewModel: RegistrationViewModel by viewModel()
+    var hideNavigation: ((Boolean)->Unit)? = null
+
+    private val registrationViewModel: RegistrationViewModel by viewModel()
 
     lateinit var binding: FragmentRegistrationBinding
 
@@ -37,6 +39,8 @@ class RegistrationFragment: BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        hideNavigation?.invoke(true)
+
         binding.editSignupLogin.textChanges()
             .subscribe{
                 registrationViewModel.login.onNext(it.toString())
@@ -81,5 +85,8 @@ class RegistrationFragment: BaseFragment() {
         }
     }
 
-
+    override fun onDestroyView() {
+        hideNavigation?.invoke(false)
+        super.onDestroyView()
+    }
 }

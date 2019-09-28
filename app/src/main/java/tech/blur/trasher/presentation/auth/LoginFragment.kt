@@ -19,7 +19,8 @@ import tech.blur.trasher.common.ext.observeNonNull
 import tech.blur.trasher.databinding.FragmentLoginBinding
 import tech.blur.trasher.presentation.BaseFragment
 
-class LoginFragment: BaseFragment(){
+class LoginFragment : BaseFragment() {
+    var hideNavigation: ((Boolean) -> Unit)? = null
 
     private val loginViewModel: LoginViewModel by viewModel()
 
@@ -39,35 +40,41 @@ class LoginFragment: BaseFragment(){
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        hideNavigation?.invoke(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        hideNavigation?.invoke(true)
         binding.editSigninLogin.textChanges()
-            .subscribe{
+            .subscribe {
                 loginViewModel.login.onNext(it.toString())
             }.addTo(compositeDisposable)
 
         binding.editSigninPassword.textChanges()
-            .subscribe{
+            .subscribe {
                 loginViewModel.password.onNext(it.toString())
             }.addTo(compositeDisposable)
 
         binding.buttonSignin.clicks()
-            .subscribe{
+            .subscribe {
                 loginViewModel.loginSubject.onNext(Unit)
             }.addTo(compositeDisposable)
 
         binding.buttonSignup
             .clicks()
-            .subscribe{
+            .subscribe {
                 findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
             }.addTo(compositeDisposable)
 
-        loginViewModel.loginResult.observeNonNull(this){
-            if (it == LoginViewModel.LoginResult.SUCCESS){
+        loginViewModel.loginResult.observeNonNull(this) {
+            if (it == LoginViewModel.LoginResult.SUCCESS) {
                 findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
             }
         }
 
-        loginViewModel.errorMessage.observeNonNull(this){
+        loginViewModel.errorMessage.observeNonNull(this) {
             val dialog = AlertDialog.Builder(context!!)
             dialog.setMessage(it)
                 .setPositiveButton("Ok") { _, _ ->
@@ -76,13 +83,18 @@ class LoginFragment: BaseFragment(){
             dialog.show()
         }
 
-        loginViewModel.networkProgress.observeNonNull(this){
+        loginViewModel.networkProgress.observeNonNull(this) {
             if (it) binding.buttonSignin.startAnimation()
             else binding.buttonSignin.revertAnimation()
         }
 
-        loginViewModel.areRequiredFieldsFilled.observeNonNull(this){
+        loginViewModel.areRequiredFieldsFilled.observeNonNull(this) {
             binding.buttonSignin.isEnabled = it
         }
+    }
+
+    override fun onDestroyView() {
+        hideNavigation?.invoke(false)
+        super.onDestroyView()
     }
 }
