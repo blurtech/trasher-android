@@ -102,7 +102,7 @@ class MapFragment : BaseFragment(),
         val permList =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET)
 
-        ActivityCompat.requestPermissions(activity!!, permList, 1)
+        ActivityCompat.requestPermissions(activity!!, permList, 1) //TODO Wait for permissions
 
         if (ContextCompat.checkSelfPermission(
                 activity!!,
