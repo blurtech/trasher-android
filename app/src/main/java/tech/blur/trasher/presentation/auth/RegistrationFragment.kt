@@ -69,9 +69,7 @@ class RegistrationFragment: BaseFragment() {
         registrationViewModel.errorMessage.observeNonNull(this){
             val dialog = AlertDialog.Builder(context!!)
             dialog.setMessage(it)
-                .setPositiveButton("Ok") { _, _ ->
-
-                }
+                .setPositiveButton("Ok"){_,_ -> }
             dialog.show()
         }
 
