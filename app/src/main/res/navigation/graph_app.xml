@@ -56,6 +56,6 @@
     </fragment>
     <fragment
         android:id="@+id/fullScannerFragment"
-        android:name="tech.blur.trasher.presentation.qr.FullScannerFragment"
+        android:name="tech.blur.trasher.presentation.qr.QRScannerFragment"
         android:label="FullScannerFragment" />
 </navigation>

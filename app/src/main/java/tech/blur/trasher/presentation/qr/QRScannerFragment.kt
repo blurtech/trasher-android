@@ -9,11 +9,13 @@ import androidx.fragment.app.DialogFragment
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import org.koin.android.ext.android.inject
+import tech.blur.trasher.UserSession
 import tech.blur.trasher.presentation.BaseFragment
 import tech.blur.trasher.presentation.view.SupportNavigationHide
 import java.util.*
 
-class FullScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, SupportNavigationHide {
+class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, SupportNavigationHide {
     override var hideNavigation: ((Boolean) -> Unit)? = null
 
     private var mScannerView: ZXingScannerView? = null
@@ -21,6 +23,8 @@ class FullScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Supp
     private var mAutoFocus: Boolean = false
     private var mSelectedIndices: ArrayList<Int>? = null
     private var mCameraId = -1
+
+    private val userSession: UserSession by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,19 +100,7 @@ class FullScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Supp
     }
 
     override fun handleResult(rawResult: Result) {
-        try {
-            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            val r = RingtoneManager.getRingtone(activity!!.applicationContext, notification)
-            r.play()
-        } catch (e: Exception) {
-        }
-
-    }
-
-    fun closeDialog(dialogName: String) {
-        val fragmentManager = activity!!.supportFragmentManager
-        val fragment = fragmentManager.findFragmentByTag(dialogName) as DialogFragment?
-        fragment?.dismiss()
+        userSession.qrCodeData(rawResult.text)
     }
 
     private fun setupFormats() {
