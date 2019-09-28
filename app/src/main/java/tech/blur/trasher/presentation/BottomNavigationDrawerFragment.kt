@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_navigationview.*
 import tech.blur.trasher.R
 
 class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
+    var onItemCliked: ((Int)->Unit)? = null
 
     var currentItem: Int = -1
 
@@ -22,7 +23,7 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
             when (menuItem.itemId) {
                 R.id.nav_map -> {
                     if (currentItem != R.id.nav_map) {
-                        findNavController().navigate(R.id.mapFragment)
+                        onItemCliked?.invoke(R.id.nav_settings)
                         currentItem = R.id.nav_map
                     }
                 }
@@ -46,8 +47,8 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
                 }
                 R.id.nav_settings -> {
                     if (currentItem != R.id.nav_settings) {
-//                        findNavController().navigate(R.id.)
-//                        currentItem = R.id.nav_settings
+                        onItemCliked?.invoke(R.id.nav_settings)
+                        currentItem = R.id.nav_settings
                     }
                 }
             }
@@ -55,6 +56,10 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
             dismiss()
             true
         }
+    }
+
+    fun setDestinationListener(listener:((Int)->Unit)){
+        onItemCliked = listener
     }
 
     override fun onCreateView(

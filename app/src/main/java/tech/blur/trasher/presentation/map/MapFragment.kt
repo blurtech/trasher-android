@@ -32,13 +32,16 @@ import tech.blur.trasher.R
 import tech.blur.trasher.common.ext.observe
 import tech.blur.trasher.databinding.FragmentMapBinding
 import tech.blur.trasher.presentation.BaseFragment
+import tech.blur.trasher.presentation.view.SupportNavigationHide
 
 
 class MapFragment : BaseFragment(),
     OnMapReadyCallback,
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener,
-    GoogleMap.OnMarkerClickListener {
+    GoogleMap.OnMarkerClickListener,
+    SupportNavigationHide {
+    override var hideNavigation: ((Boolean) -> Unit)? = null
 
     private val mapViewModel: MapViewModel by viewModel()
 
@@ -83,6 +86,11 @@ class MapFragment : BaseFragment(),
         binding.executePendingBindings()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        hideNavigation?.invoke(false)
+        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

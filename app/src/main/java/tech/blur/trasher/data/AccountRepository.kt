@@ -15,7 +15,10 @@ class AccountRepository(
                 .putString(::userToken.name, Gson().toJson(token, Token::class.java))
                 .apply()
         }
-        get() = Gson().fromJson(sharedPreferences.getString(::userToken.name, null), Token::class.java)
+        get() = Gson().fromJson(
+            sharedPreferences.getString(::userToken.name, null),
+            Token::class.java
+        )
 
     val isUserLoggedIn: Boolean
         get() = sharedPreferences.getString(::userToken.name, null) != null
@@ -28,9 +31,15 @@ class AccountRepository(
         }
         get() = Gson().fromJson(sharedPreferences.getString(::user.name, null), User::class.java)
 
-    fun autorizeUser(user: User, token: Token){
+    fun authorizeUser(user: User, token: Token) {
         if (token.token.isBlank()) throw IllegalStateException("Token must be provided")
         this.user = user
         this.userToken = token
+    }
+
+    fun logOut() {
+        sharedPreferences.edit()
+            .clear()
+            .apply()
     }
 }

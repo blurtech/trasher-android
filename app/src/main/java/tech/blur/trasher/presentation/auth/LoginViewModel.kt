@@ -1,6 +1,5 @@
 package tech.blur.trasher.presentation.auth
 
-import android.accounts.AccountManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
@@ -17,7 +16,6 @@ import tech.blur.trasher.common.toResult
 import tech.blur.trasher.data.AccountRepository
 import tech.blur.trasher.data.api.TrasherApi
 import tech.blur.trasher.domain.LoginRequest
-import tech.blur.trasher.domain.User
 import tech.blur.trasher.presentation.BaseViewModel
 
 class LoginViewModel(
@@ -62,7 +60,7 @@ class LoginViewModel(
             }
             .flatMapSingle {
                 if (it is Result.Success) {
-                    accountRepository.autorizeUser(it.data.data.user, it.data.data.getToken())
+                    accountRepository.authorizeUser(it.data.data.user, it.data.data.getToken())
                 }
                 Single.just(it)
             }

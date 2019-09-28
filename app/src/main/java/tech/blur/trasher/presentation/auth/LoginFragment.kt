@@ -60,7 +60,7 @@ class LoginFragment : BaseFragment(), SupportNavigationHide {
 
         binding.buttonSignin.clicks()
             .subscribe {
-                loginViewModel.loginSubject.onNext(Unit)
+                    loginViewModel.loginSubject.onNext(Unit)
             }.addTo(compositeDisposable)
 
         binding.buttonSignup

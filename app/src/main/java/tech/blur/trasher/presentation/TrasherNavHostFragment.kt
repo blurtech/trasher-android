@@ -28,7 +28,7 @@ class TrasherNavHostFragment : NavHostFragment(), SupportBackStack {
     }
 
     override fun resetBackStack() {
-//        navController.popBackStack(R.id., false)
+//        navController.popBackStack(R.id.mapFragment, true)
     }
 
     override fun popBackStack(): Boolean {

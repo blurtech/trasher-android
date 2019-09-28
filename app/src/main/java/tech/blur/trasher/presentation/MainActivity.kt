@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import tech.blur.trasher.R
 import tech.blur.trasher.data.AccountRepository
+import tech.blur.trasher.presentation.view.SupportBackStack
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,8 +23,6 @@ class MainActivity : AppCompatActivity() {
     private val accountRepository: AccountRepository by inject()
 
     val mainActivityViewModel: MainActivityViewModel by inject()
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +41,26 @@ class MainActivity : AppCompatActivity() {
             android.R.id.home -> {
                 val bottomNavDrawerFragment = BottomNavigationDrawerFragment()
                 bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
+                bottomNavDrawerFragment.setDestinationListener {
+                    when (it) {
+                        R.id.nav_map -> {
+                            navHost_mainActivity.findNavController().navigate(R.id.mapFragment)
+                        }
+                        R.id.nav_profile -> {
+//                        findNavController().navigate(R.id.)
+
+                        }
+                        R.id.nav_about -> {
+//                        findNavController().navigate(R.id.)
+                        }
+                        R.id.nav_eco -> {
+//                        findNavController().navigate(R.id.)
+                        }
+                        R.id.nav_settings -> {
+                                navHost_mainActivity.findNavController().navigate(R.id.action_mapFragment_to_settingsFragment)
+                        }
+                    }
+                }
             }
         }
         return true
@@ -73,12 +92,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        navHost_mainActivity.findNavController().popBackStack()
-    }
+        if (navHost_mainActivity is SupportBackStack) {
+            when {
+                (navHost_mainActivity as SupportBackStack).popBackStack() -> return
+            }
+        }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.navHost_mainActivity)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        moveTaskToBack(true)
     }
 }
 
