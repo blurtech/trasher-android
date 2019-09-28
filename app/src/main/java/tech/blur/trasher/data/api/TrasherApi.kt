@@ -1,14 +1,8 @@
 package tech.blur.trasher.data.api
 
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import tech.blur.trasher.domain.LoginRequest
-import tech.blur.trasher.domain.LoginResponse
-import tech.blur.trasher.domain.RegisterRequest
-import tech.blur.trasher.domain.Wrapper
+import retrofit2.http.*
+import tech.blur.trasher.domain.*
 
 interface TrasherApi {
 
@@ -18,4 +12,11 @@ interface TrasherApi {
     @POST("user/register")
     fun register(@Body registerRequest: RegisterRequest): Single<Wrapper<LoginResponse>>
 
+    @GET("litterstorage/")
+    @Headers("Authorization: required")
+    fun getTrashCans(): Single<Wrapper<List<Trashcan>>>
+
+    @GET("litterstorage/")
+    @Headers("Authorization: required")
+    fun getTrashCans(@Query("city") city: String): Single<Wrapper<List<Trashcan>>>
 }
