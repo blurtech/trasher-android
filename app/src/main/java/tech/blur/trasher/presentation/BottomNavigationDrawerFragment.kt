@@ -33,6 +33,12 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
 //                        currentItem = R.id.nav_profile
                     }
                 }
+                R.id.nav_bonus -> {
+                    if (currentItem != R.id.nav_bonus) {
+//                        findNavController().navigate(R.id.)
+//                        currentItem = R.id.nav_bonus
+                    }
+                }
                 R.id.nav_about -> {
                     if (currentItem != R.id.nav_about) {
 //                        findNavController().navigate(R.id.)

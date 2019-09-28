@@ -167,20 +167,18 @@ class MapFragment : BaseFragment(),
     private fun paintMarkers() {
         mapViewModel.trashcans.observe(this) { list ->
             list?.map {
-                runBlocking {
-                    googleMap.addMarker(
-                        MarkerOptions().apply {
-                            position(
-                                it.latlng
-                            )
-                            icon(
-                                BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_map_point))
-                            )
-                            draggable(false)
-                            title("мусорка") //it.name
-                        }
-                    ).tag = it.id
-                }
+                googleMap.addMarker(
+                    MarkerOptions().apply {
+                        position(
+                            it.latlng
+                        )
+                        icon(
+                            BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_map_point))
+                        )
+                        draggable(false)
+                        title("мусорка") //it.name
+                    }
+                ).tag = it.id
             }
         }
     }

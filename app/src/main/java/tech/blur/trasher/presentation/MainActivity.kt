@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 } else {
                     navHost_mainActivity.findNavController()
-                        .navigate(R.id.action_mapFragment_to_fullScannerFragment)
+                        .navigate(R.id.action_mapFragment_to_qrScannerFragment)
                 }
             }.addTo(disposable)
     }
@@ -69,14 +69,18 @@ class MainActivity : AppCompatActivity() {
                             navHost_mainActivity.findNavController().navigate(R.id.mapFragment)
                         }
                         R.id.nav_profile -> {
-//                        findNavController().navigate(R.id.)
+//                        navHost_mainActivity.findNavController().navigate(R.id.)
+
+                        }
+                        R.id.nav_bonus -> {
+//                            navHost_mainActivity.findNavController().navigate(R.id.)
 
                         }
                         R.id.nav_about -> {
-//                        findNavController().navigate(R.id.)
+//                        navHost_mainActivity.findNavController().navigate(R.id.)
                         }
                         R.id.nav_eco -> {
-//                        findNavController().navigate(R.id.)
+//                        navHost_mainActivity.findNavController().navigate(R.id.)
                         }
                         R.id.nav_settings -> {
                             navHost_mainActivity.findNavController()
@@ -119,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         if (requestCode == 2)
             navHost_mainActivity.findNavController()
-                .navigate(R.id.action_mapFragment_to_fullScannerFragment)
+                .navigate(R.id.action_mapFragment_to_qrScannerFragment)
     }
 
     override fun onBackPressed() {

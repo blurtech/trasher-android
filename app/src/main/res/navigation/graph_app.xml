@@ -17,8 +17,8 @@
             android:id="@+id/action_mapFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/action_mapFragment_to_fullScannerFragment"
-            app:destination="@id/fullScannerFragment" />
+            android:id="@+id/action_mapFragment_to_qrScannerFragment"
+            app:destination="@id/QRlScannerFragment" />
     </fragment>
 
     <fragment
@@ -55,7 +55,20 @@
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
-        android:id="@+id/fullScannerFragment"
+        android:id="@+id/QRlScannerFragment"
         android:name="tech.blur.trasher.presentation.qr.QRScannerFragment"
-        android:label="FullScannerFragment" />
+        android:label="FullScannerFragment" >
+        <action
+            android:id="@+id/action_qrScannerFragment_to_trashEjectionFragment"
+            app:destination="@id/trashEjectionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trashEjectionFragment"
+        tools:layout="@layout/fragment_trashejection"
+        android:name="tech.blur.trasher.presentation.trashEjection.TrashEjectionFragment"
+        android:label="TrashEjectionFragment" >
+        <argument
+            android:name="QRString"
+            app:argType="string" />
+    </fragment>
 </navigation>

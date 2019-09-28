@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.Navigator
+import androidx.navigation.fragment.findNavController
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 import org.koin.android.ext.android.inject
+import tech.blur.trasher.R
 import tech.blur.trasher.UserSession
 import tech.blur.trasher.presentation.BaseFragment
+import tech.blur.trasher.presentation.trashEjection.TrashEjectionFragment
 import tech.blur.trasher.presentation.view.SupportNavigationHide
 import java.util.*
 
@@ -101,6 +105,8 @@ class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Suppor
 
     override fun handleResult(rawResult: Result) {
         userSession.qrCodeData(rawResult.text)
+
+//        findNavController().navigate(R.id.action_qrScannerFragment_to_trashEjectionFragment, Bundle().putString("QRString",rawResult.text))
     }
 
     private fun setupFormats() {

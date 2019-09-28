@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Trasher</string>
+    <string name="trashEjection_paper">Бумага</string>
+    <string name="trashEjection_food">Пишевые отходы</string>
+    <string name="trashEjection_glass">Стекло</string>
+    <string name="trashEjection_poly">Пластик</string>
+    <string name="trashEjection_dangerous">Опасные</string>
 </resources>

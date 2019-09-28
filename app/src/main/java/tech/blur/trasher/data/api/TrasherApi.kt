@@ -19,4 +19,8 @@ interface TrasherApi {
     @GET("litterstorage/")
     @Headers("Authorization: required")
     fun getTrashCans(@Query("city") city: String): Single<Wrapper<List<Trashcan>>>
+
+    @POST("litter/")
+    @Headers("Authorization: required")
+    fun ejectTrash(@Body ejectTrashRequest: EjectTrashRequest): Single<Trash>
 }
