@@ -1,34 +1,44 @@
 package tech.blur.trasher.presentation.map
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import tech.blur.trasher.R
+import tech.blur.trasher.common.ext.observe
 import tech.blur.trasher.databinding.FragmentMapBinding
 import tech.blur.trasher.presentation.BaseFragment
+
 
 class MapFragment : BaseFragment(),
     OnMapReadyCallback,
     GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener {
+    GoogleApiClient.OnConnectionFailedListener,
+    GoogleMap.OnMarkerClickListener {
 
     private val mapViewModel: MapViewModel by viewModel()
 
@@ -36,7 +46,7 @@ class MapFragment : BaseFragment(),
 
     private lateinit var googleApiClient: GoogleApiClient
 
-    lateinit var binding: FragmentMapBinding
+    private lateinit var binding: FragmentMapBinding
 
     private var mBottomSheetBehavior: BottomSheetBehavior<View?>? = null
 
@@ -60,6 +70,7 @@ class MapFragment : BaseFragment(),
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map_mapFragment) as SupportMapFragment
 
+        mapViewModel.loadTrashcans.onNext(Unit)
         mapFragment.getMapAsync(this)
 
         googleApiClient = GoogleApiClient.Builder(context!!)
@@ -96,8 +107,9 @@ class MapFragment : BaseFragment(),
 //        }
 //    }
 
-    override fun onMapReady(map: GoogleMap?) {
-        googleMap = map!!
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+        googleMap.setPadding(0, 0, 0, 100)
 
         val permList =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET)
@@ -117,14 +129,54 @@ class MapFragment : BaseFragment(),
                 isBuildingsEnabled = true
                 uiSettings.isZoomControlsEnabled = false
             }
-//            googleMap.setOnMyLocationButtonClickListener(this)
-            //googleMap.setOnMyLocationClickListener(this)
-            //googleMap.setOnMapClickListener(this)
-            //googleMap.setOnMapLongClickListener(this)
-//            googleMap.setOnMarkerClickListener(this)
-            //googleMap.setOnMarkerDragListener(this)
+
             getCurrentLocation()
         }
+
+        googleMap.setOnMarkerClickListener(this)
+
+        paintMarkers()
+    }
+
+    private fun paintMarkers() {
+        mapViewModel.trashcans.observe(this) { list ->
+            list?.map {
+                runBlocking {
+                    googleMap.addMarker(
+                        MarkerOptions().apply {
+                            position(
+                                it.latlng
+                            )
+                            icon(
+                                BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_map_point))
+                            )
+                            draggable(false)
+                            title("мусорка") //it.name
+                        }
+                    ).tag = it.id
+                }
+            }
+        }
+    }
+
+    fun getBitmap(@DrawableRes drawableRes: Int): Bitmap {
+        val drawable = resources.getDrawable(drawableRes)
+        val canvas = Canvas()
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        canvas.setBitmap(bitmap)
+        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+        drawable.draw(canvas)
+
+        return bitmap
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        Toast.makeText(activity, marker.tag.toString(), Toast.LENGTH_SHORT).show()
+        return true
     }
 
     private fun getCurrentLocation() {
@@ -146,10 +198,10 @@ class MapFragment : BaseFragment(),
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        val location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
-        if (location != null) {
-            moveMap(location.latitude, location.longitude)
-        }
+        getFusedLocationProviderClient(activity as Activity).lastLocation
+            .addOnSuccessListener {
+                moveMap(it.latitude, it.longitude)
+            }
     }
 
     private fun moveMap(latitude: Double, longitude: Double) {

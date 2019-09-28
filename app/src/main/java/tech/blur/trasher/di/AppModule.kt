@@ -29,14 +29,14 @@ private var appModule = module {
     single {
         TrashRepository(
             androidApplication().getSharedPreferences(
-                "Credentials",
+                "Trash",
                 Context.MODE_PRIVATE
             )
         )
     }
 
     viewModel { MainActivityViewModel(get()) }
-    viewModel { MapViewModel(get()) }
+    viewModel { MapViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get()) }
     viewModel { RegistrationViewModel(get(), get(), get()) }
 
