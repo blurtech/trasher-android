@@ -92,9 +92,4 @@ class LoginFragment : BaseFragment() {
             binding.buttonSignin.isEnabled = it
         }
     }
-
-    override fun onDestroyView() {
-        hideNavigation?.invoke(false)
-        super.onDestroyView()
-    }
 }

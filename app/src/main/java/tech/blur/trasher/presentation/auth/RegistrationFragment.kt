@@ -17,8 +17,8 @@ import tech.blur.trasher.common.ext.observeNonNull
 import tech.blur.trasher.databinding.FragmentRegistrationBinding
 import tech.blur.trasher.presentation.BaseFragment
 
-class RegistrationFragment: BaseFragment() {
-    var hideNavigation: ((Boolean)->Unit)? = null
+class RegistrationFragment : BaseFragment() {
+    var hideNavigation: ((Boolean) -> Unit)? = null
 
     private val registrationViewModel: RegistrationViewModel by viewModel()
 
@@ -38,53 +38,54 @@ class RegistrationFragment: BaseFragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        hideNavigation?.invoke(true)
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         hideNavigation?.invoke(true)
 
         binding.editSignupLogin.textChanges()
-            .subscribe{
+            .subscribe {
                 registrationViewModel.login.onNext(it.toString())
             }.addTo(compositeDisposable)
 
         binding.editSignupPassword.textChanges()
-            .subscribe{
+            .subscribe {
                 registrationViewModel.password.onNext(it.toString())
             }.addTo(compositeDisposable)
 
         binding.registerButton.clicks()
-            .subscribe{
+            .subscribe {
                 registrationViewModel.loginSubject.onNext(Unit)
             }.addTo(compositeDisposable)
 
         binding.editSignupCity
             .textChanges()
-            .subscribe{
+            .subscribe {
                 registrationViewModel.city.onNext(it.toString())
             }.addTo(compositeDisposable)
 
-        registrationViewModel.registrationResult.observeNonNull(this){
-                findNavController().navigate(R.id.action_registrationFragment_to_mapFragment)
+        registrationViewModel.registrationResult.observeNonNull(this) {
+            findNavController().navigate(R.id.action_registrationFragment_to_mapFragment)
         }
 
-        registrationViewModel.errorMessage.observeNonNull(this){
+        registrationViewModel.errorMessage.observeNonNull(this) {
             val dialog = AlertDialog.Builder(context!!)
             dialog.setMessage(it)
-                .setPositiveButton("Ok"){_,_ -> }
+                .setPositiveButton("Ok") { _, _ -> }
             dialog.show()
         }
 
-        registrationViewModel.networkProgress.observeNonNull(this){
+        registrationViewModel.networkProgress.observeNonNull(this) {
             if (it) binding.registerButton.startAnimation()
             else binding.registerButton.revertAnimation()
         }
 
-        registrationViewModel.areRequiredFieldsFilled.observeNonNull(this){
+        registrationViewModel.areRequiredFieldsFilled.observeNonNull(this) {
             binding.registerButton.isEnabled = it
         }
-    }
-
-    override fun onDestroyView() {
-        hideNavigation?.invoke(false)
-        super.onDestroyView()
     }
 }

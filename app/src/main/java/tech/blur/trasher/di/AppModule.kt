@@ -1,6 +1,7 @@
 package tech.blur.trasher.di
 
 import android.content.Context
+import com.google.android.gms.maps.model.LatLng
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

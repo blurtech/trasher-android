@@ -33,7 +33,7 @@ class LoginViewModel(
     val networkProgress: LiveData<Boolean> = mutableNetworkProgress
 
     private val mutableAreRequiredFieldsFilled = MutableLiveData<Boolean>(false)
-    val areRequiredFieldsFilled:LiveData<Boolean> = mutableAreRequiredFieldsFilled
+    val areRequiredFieldsFilled: LiveData<Boolean> = mutableAreRequiredFieldsFilled
 
     private val mutableLoginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = mutableLoginResult
@@ -57,37 +57,44 @@ class LoginViewModel(
         loginSubject
             .withLatestFrom(credentialObservable)
             .doOnNext { mutableNetworkProgress.value = true }
-            .flatMapSingle{
+            .flatMapSingle {
                 api.login(LoginRequest(it.second.login, it.second.password)).toResult()
             }
             .flatMapSingle {
-                if (it is Result.Success){
+                if (it is Result.Success) {
                     accountRepository.autorizeUser(it.data.data.user, it.data.data.getToken())
                 }
                 Single.just(it)
             }
             .observeOn(schedulerProvider.ui())
-            .unsubscribeOn(schedulerProvider.io())
             .subscribe {
-                when (it){
+                when (it) {
                     is Result.Success -> {
                         mutableLoginResult.value = LoginResult.SUCCESS
                     }
                     is Result.Failure -> {
                         mutableLoginResult.value = LoginResult.FAILURE
-                        if ((it.throwable as HttpException).code() == 503)
-                            mutableErrorMessage.value = "Неверные данные"
-                        else
-                            mutableErrorMessage.value = "Какие то проблемы с сетью("
+
+                        when (it.throwable) {
+                            is HttpException -> {
+                                if (it.throwable.code() == 503)
+                                    mutableErrorMessage.value = "Неверные данные"
+                                else
+                                    mutableErrorMessage.value = "Какие то проблемы с сетью("
+                            }
+                            else -> {
+                                mutableErrorMessage.value = it.throwable.message
+                            }
+                        }
                     }
                 }
                 mutableNetworkProgress.value = false
             }.addTo(compositeDisposable)
     }
 
-    private data class CredentialModel(val login: String, val password:String)
+    private data class CredentialModel(val login: String, val password: String)
 
-    enum class LoginResult{
+    enum class LoginResult {
         SUCCESS,
         FAILURE
     }

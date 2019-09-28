@@ -24,6 +24,7 @@
             android:id="@+id/action_registrationFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="tech.blur.trasher.presentation.auth.LoginFragment"

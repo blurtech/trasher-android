@@ -1,16 +1,21 @@
 package tech.blur.trasher.presentation
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import tech.blur.trasher.R
 import tech.blur.trasher.data.AccountRepository
-import tech.blur.trasher.presentation.auth.LoginFragment
-import tech.blur.trasher.presentation.auth.RegistrationFragment
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,28 +23,61 @@ class MainActivity : AppCompatActivity() {
 
     val mainActivityViewModel: MainActivityViewModel by inject()
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (!accountRepository.isUserLoggedIn) {
-            container_main.findNavController().navigate(R.id.action_mapFragment_to_loginFragment)
-        }
+        setSupportActionBar(bottomAppBar_mainActivity)
 
+        if (!accountRepository.isUserLoggedIn) {
+            navHost_mainActivity.findNavController().navigate(R.id.action_mapFragment_to_loginFragment)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            android.R.id.home -> {
+                val bottomNavDrawerFragment = BottomNavigationDrawerFragment()
+                bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
+            }
+        }
+        return true
     }
 
     override fun onAttachFragment(fragment: Fragment) {
-            when(fragment){
-                is TrasherNavHostFragment -> fragment.hideNavigation = ::hideNavBar
+        when (fragment) {
+            is TrasherNavHostFragment -> fragment.hideNavigation = ::hideNavBar
         }
     }
 
     private fun hideNavBar(hide: Boolean) {
-        bottomAppBar_mainActivity.visibility = if (hide) View.GONE else View.VISIBLE
+        val p = frameLayout_mainActivity_navHostContainer.layoutParams as CoordinatorLayout.LayoutParams
+
+        bottomAppBar_mainActivity.visibility = if (hide) {
+            p.setMargins(0,0,0, 56)
+            View.GONE
+        } else {
+            p.setMargins(0,0,0, 56)
+            View.VISIBLE
+        }
+
+        frameLayout_mainActivity_navHostContainer.layoutParams = p
+
+
+
+
+
     }
 
     override fun onBackPressed() {
-        container_main.findNavController().popBackStack()
+        navHost_mainActivity.findNavController().popBackStack()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.navHost_mainActivity)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }
 

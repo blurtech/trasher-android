@@ -25,6 +25,9 @@ class TrasherNavHostFragment : NavHostFragment(), SupportBackStack {
             is RegistrationFragment -> {
                 fragment.hideNavigation = hideNavigation
             }
+            else -> {
+                hideNavigation?.invoke(false)
+            }
         }
     }
 

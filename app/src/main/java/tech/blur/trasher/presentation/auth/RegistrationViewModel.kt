@@ -59,7 +59,13 @@ class RegistrationViewModel(
             .withLatestFrom(registrationDataObservable)
             .doOnNext { mutableNetworkProgress.value = true }
             .flatMapSingle {
-                api.register(RegisterRequest(it.second.login, it.second.password, Address(it.second.city))).toResult()
+                api.register(
+                    RegisterRequest(
+                        it.second.login,
+                        it.second.password,
+                        Address(it.second.city)
+                    )
+                ).toResult()
             }
             .flatMapSingle {
                 if (it is Result.Success) {
@@ -75,10 +81,19 @@ class RegistrationViewModel(
                     }
                     is Result.Failure -> {
                         mutableRegistrationResult.value = null
-                        if ((it.throwable as HttpException).code() == 422)
-                            mutableErrorMessage.value = "Пользователь с таким логином уже существует"
-                        else
-                            mutableErrorMessage.value = "Какие то проблемы с сетью("
+                        when (it.throwable) {
+                            is HttpException -> {
+                                if (it.throwable.code() == 422)
+                                    mutableErrorMessage.value =
+                                        "Пользователь с таким логином уже существует"
+                                else
+                                    mutableErrorMessage.value = "Какие то проблемы с сетью("
+                            }
+                            else -> {
+                                mutableErrorMessage.value = it.throwable.message
+                            }
+                        }
+
                     }
                 }
                 mutableNetworkProgress.value = false
