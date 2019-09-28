@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import tech.blur.trasher.UserSession
 import tech.blur.trasher.common.rx.AppSchedulerProvider
 import tech.blur.trasher.common.rx.SchedulerProvider
 import tech.blur.trasher.data.AccountRepository
@@ -34,6 +35,8 @@ private var appModule = module {
             )
         )
     }
+
+    single { UserSession() }
 
     viewModel { MainActivityViewModel(get()) }
     viewModel { MapViewModel(get(), get(), get()) }

@@ -93,6 +93,24 @@ class MapFragment : BaseFragment(),
         super.onResume()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+
+        if (requestCode == 1) {
+            googleMap.apply {
+                isMyLocationEnabled = true
+                isBuildingsEnabled = true
+                uiSettings.isZoomControlsEnabled = false
+            }
+
+            getCurrentLocation()
+        }
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 

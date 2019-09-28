@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mapFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_fullScannerFragment"
+            app:destination="@id/fullScannerFragment" />
     </fragment>
 
     <fragment
@@ -51,4 +54,8 @@
             android:id="@+id/action_settingsFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/fullScannerFragment"
+        android:name="tech.blur.trasher.presentation.qr.FullScannerFragment"
+        android:label="FullScannerFragment" />
 </navigation>

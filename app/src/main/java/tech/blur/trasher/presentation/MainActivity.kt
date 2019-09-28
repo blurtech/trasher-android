@@ -1,20 +1,29 @@
 package tech.blur.trasher.presentation
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.jakewharton.rxbinding3.view.clicks
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import tech.blur.trasher.R
 import tech.blur.trasher.data.AccountRepository
+import tech.blur.trasher.presentation.qr.FullScannerFragment
 import tech.blur.trasher.presentation.view.SupportBackStack
 
 
@@ -23,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private val accountRepository: AccountRepository by inject()
 
     val mainActivityViewModel: MainActivityViewModel by inject()
+
+    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +45,23 @@ class MainActivity : AppCompatActivity() {
             navHost_mainActivity.findNavController()
                 .navigate(R.id.action_mapFragment_to_loginFragment)
         }
+
+        fab_activityMain.clicks()
+            .subscribe {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) run {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.CAMERA), 2
+                    )
+                } else {
+                    navHost_mainActivity.findNavController()
+                        .navigate(R.id.action_mapFragment_to_fullScannerFragment)
+                }
+            }.addTo(disposable)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -57,7 +85,8 @@ class MainActivity : AppCompatActivity() {
 //                        findNavController().navigate(R.id.)
                         }
                         R.id.nav_settings -> {
-                                navHost_mainActivity.findNavController().navigate(R.id.action_mapFragment_to_settingsFragment)
+                            navHost_mainActivity.findNavController()
+                                .navigate(R.id.action_mapFragment_to_settingsFragment)
                         }
                     }
                 }
@@ -87,8 +116,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         frameLayout_mainActivity_navHostContainer.layoutParams = p
+    }
 
-
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 2)
+            navHost_mainActivity.findNavController()
+                .navigate(R.id.action_mapFragment_to_fullScannerFragment)
     }
 
     override fun onBackPressed() {
@@ -99,6 +136,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         moveTaskToBack(true)
+    }
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
     }
 }
 
