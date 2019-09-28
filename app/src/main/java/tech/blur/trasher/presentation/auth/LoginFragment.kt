@@ -18,9 +18,10 @@ import tech.blur.trasher.common.ext.observe
 import tech.blur.trasher.common.ext.observeNonNull
 import tech.blur.trasher.databinding.FragmentLoginBinding
 import tech.blur.trasher.presentation.BaseFragment
+import tech.blur.trasher.presentation.view.SupportNavigationHide
 
-class LoginFragment : BaseFragment() {
-    var hideNavigation: ((Boolean) -> Unit)? = null
+class LoginFragment : BaseFragment(), SupportNavigationHide {
+    override var hideNavigation: ((Boolean) -> Unit)? = null
 
     private val loginViewModel: LoginViewModel by viewModel()
 

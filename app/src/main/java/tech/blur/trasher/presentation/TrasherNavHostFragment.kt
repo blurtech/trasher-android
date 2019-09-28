@@ -7,9 +7,10 @@ import tech.blur.trasher.R
 import tech.blur.trasher.presentation.auth.LoginFragment
 import tech.blur.trasher.presentation.auth.RegistrationFragment
 import tech.blur.trasher.presentation.view.SupportBackStack
+import tech.blur.trasher.presentation.view.SupportNavigationHide
 
 class TrasherNavHostFragment : NavHostFragment(), SupportBackStack {
-    var hideNavigation: ((Boolean)->Unit)? = null
+    var hideNavigation: ((Boolean) -> Unit)? = null
     var onBackPressed: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,12 +20,7 @@ class TrasherNavHostFragment : NavHostFragment(), SupportBackStack {
 
     override fun onAttachFragment(fragment: Fragment) {
         when (fragment) {
-            is LoginFragment -> {
-                fragment.hideNavigation = hideNavigation
-            }
-            is RegistrationFragment -> {
-                fragment.hideNavigation = hideNavigation
-            }
+            is SupportNavigationHide -> fragment.hideNavigation = hideNavigation
             else -> {
                 hideNavigation?.invoke(false)
             }

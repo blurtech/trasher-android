@@ -16,9 +16,11 @@ import tech.blur.trasher.R
 import tech.blur.trasher.common.ext.observeNonNull
 import tech.blur.trasher.databinding.FragmentRegistrationBinding
 import tech.blur.trasher.presentation.BaseFragment
+import tech.blur.trasher.presentation.view.SupportNavigationHide
 
-class RegistrationFragment : BaseFragment() {
-    var hideNavigation: ((Boolean) -> Unit)? = null
+class RegistrationFragment : BaseFragment(), SupportNavigationHide {
+    override var hideNavigation: ((Boolean) -> Unit)? = null
+
 
     private val registrationViewModel: RegistrationViewModel by viewModel()
 
