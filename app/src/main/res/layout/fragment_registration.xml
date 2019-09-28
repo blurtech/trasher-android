@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data/>
+    <data />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageView"
@@ -32,7 +32,10 @@
                 android:id="@+id/edit_signup_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Город" />
+                android:hint="Город"
+                android:maxLines="1"
+                android:nextFocusDown="@id/edit_signup_login"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -48,7 +51,10 @@
                 android:id="@+id/edit_signup_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Логин" />
+                android:hint="Логин"
+                android:maxLines="1"
+                android:nextFocusDown="@id/edit_signup_password"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -65,7 +71,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Пароль"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:nextFocusDown="@id/register_button"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -81,6 +90,7 @@
             android:layout_marginBottom="8dp"
             android:text="Зарегистрироваться"
             android:textSize="@dimen/buttonTextSize"
+            app:spinning_bar_color="#FFFFFF"
             app:strokeColor="@color/colorAccent"
             app:strokeWidth="2dp" />
     </LinearLayout>
