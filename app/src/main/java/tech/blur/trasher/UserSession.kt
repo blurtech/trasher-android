@@ -6,9 +6,15 @@ import tech.blur.trasher.domain.TrashcanInfo
 
 class UserSession {
     private val qrCodeCanDataSubject = BehaviorSubject.create<TrashcanInfo>()
+    private val buildTripSubject = BehaviorSubject.create<Unit>()
 
     fun qrCodeCanDataObservable(): Observable<TrashcanInfo> = qrCodeCanDataSubject
     fun qrCodeCanData(value: TrashcanInfo){
         qrCodeCanDataSubject.onNext(value)
+    }
+
+    fun buildTripObservable(): Observable<Unit> = buildTripSubject
+    fun buildTrip (){
+        buildTripSubject.onNext(Unit)
     }
 }

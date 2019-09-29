@@ -5,7 +5,8 @@ data class User(
     val username: String,
     val bags: Int,
     val points: Int,
-    val address: Address
+    val address: Address,
+    val token: String
 )
 //
 //data class UserAddress(

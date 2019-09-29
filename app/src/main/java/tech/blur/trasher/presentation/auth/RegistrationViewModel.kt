@@ -17,6 +17,7 @@ import tech.blur.trasher.data.AccountRepository
 import tech.blur.trasher.data.api.TrasherApi
 import tech.blur.trasher.domain.Address
 import tech.blur.trasher.domain.RegisterRequest
+import tech.blur.trasher.domain.Token
 import tech.blur.trasher.domain.User
 import tech.blur.trasher.presentation.BaseViewModel
 
@@ -68,7 +69,7 @@ class RegistrationViewModel(
             }
             .flatMapSingle {
                 if (it is Result.Success) {
-                    accountRepository.authorizeUser(it.data.data.user, it.data.data.getToken())
+                    accountRepository.authorizeUser(it.data.data, Token(it.data.data.token))
                 }
                 Single.just(it)
             }
@@ -76,7 +77,7 @@ class RegistrationViewModel(
             .subscribe {
                 when (it) {
                     is Result.Success -> {
-                        mutableRegistrationResult.value = it.data.data.user
+                        mutableRegistrationResult.value = it.data.data
                     }
                     is Result.Failure -> {
                         mutableRegistrationResult.value = null

@@ -12,11 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.longClicks
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import tech.blur.trasher.R
+import tech.blur.trasher.UserSession
 import tech.blur.trasher.data.AccountRepository
 import tech.blur.trasher.presentation.view.SupportBackStack
 
@@ -25,7 +27,9 @@ class MainActivity : AppCompatActivity() {
 
     private val accountRepository: AccountRepository by inject()
 
-    val mainActivityViewModel: MainActivityViewModel by inject()
+    private val mainActivityViewModel: MainActivityViewModel by inject()
+
+    private val userSession: UserSession by inject()
 
     private val disposable = CompositeDisposable()
 
@@ -55,6 +59,11 @@ class MainActivity : AppCompatActivity() {
                     navHost_mainActivity.findNavController()
                         .navigate(R.id.action_mapFragment_to_qrScannerFragment)
                 }
+            }.addTo(disposable)
+
+        fab_activityMain.longClicks()
+            .subscribe{
+                userSession.buildTrip()
             }.addTo(disposable)
     }
 

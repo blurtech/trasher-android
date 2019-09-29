@@ -26,10 +26,14 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Picasso
+import io.reactivex.rxkotlin.addTo
 import kotlinx.coroutines.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import tech.blur.trasher.R
+import tech.blur.trasher.UserSession
 import tech.blur.trasher.common.ext.observe
+import tech.blur.trasher.common.rx.SchedulerProvider
 import tech.blur.trasher.databinding.FragmentMapBinding
 import tech.blur.trasher.presentation.BaseFragment
 import tech.blur.trasher.presentation.view.SupportNavigationHide
@@ -50,6 +54,9 @@ class MapFragment : BaseFragment(),
     private lateinit var googleApiClient: GoogleApiClient
 
     private lateinit var binding: FragmentMapBinding
+
+    private val userSession: UserSession by inject()
+    private val schedulerProvider: SchedulerProvider by inject()
 
     private var mBottomSheetBehavior: BottomSheetBehavior<View?>? = null
 
@@ -84,6 +91,12 @@ class MapFragment : BaseFragment(),
         googleApiClient.connect()
 
         binding.executePendingBindings()
+
+        userSession.buildTripObservable()
+            .observeOn(schedulerProvider.ui())
+            .subscribe{
+                // open dialog
+            }.addTo(compositeDisposable)
 
         return binding.root
     }

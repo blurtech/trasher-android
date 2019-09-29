@@ -16,6 +16,7 @@ import tech.blur.trasher.common.toResult
 import tech.blur.trasher.data.AccountRepository
 import tech.blur.trasher.data.api.TrasherApi
 import tech.blur.trasher.domain.LoginRequest
+import tech.blur.trasher.domain.Token
 import tech.blur.trasher.presentation.BaseViewModel
 
 class LoginViewModel(
@@ -60,7 +61,7 @@ class LoginViewModel(
             }
             .flatMapSingle {
                 if (it is Result.Success) {
-                    accountRepository.authorizeUser(it.data.data.user, it.data.data.getToken())
+                    accountRepository.authorizeUser(it.data.data, Token(it.data.data.token))
                 }
                 Single.just(it)
             }
