@@ -5,8 +5,11 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +28,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.maps.android.PolyUtil
+import com.google.maps.model.DirectionsResult
 import com.squareup.picasso.Picasso
 import io.reactivex.rxkotlin.addTo
 import kotlinx.coroutines.*
@@ -33,6 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import tech.blur.trasher.R
 import tech.blur.trasher.UserSession
 import tech.blur.trasher.common.ext.observe
+import tech.blur.trasher.common.ext.observeNonNull
 import tech.blur.trasher.common.rx.SchedulerProvider
 import tech.blur.trasher.databinding.FragmentMapBinding
 import tech.blur.trasher.presentation.BaseFragment
@@ -57,6 +63,9 @@ class MapFragment : BaseFragment(),
 
     private val userSession: UserSession by inject()
     private val schedulerProvider: SchedulerProvider by inject()
+
+    private var location: Location? = null
+    private var polyline: Polyline? = null
 
     private var mBottomSheetBehavior: BottomSheetBehavior<View?>? = null
 
@@ -94,9 +103,13 @@ class MapFragment : BaseFragment(),
 
         userSession.buildTripObservable()
             .observeOn(schedulerProvider.ui())
-            .subscribe{
+            .subscribe {
                 // open dialog
             }.addTo(compositeDisposable)
+
+        mapViewModel.route.observeNonNull(this) {
+            drawPollyLine(it!!)
+        }
 
         return binding.root
     }
@@ -213,7 +226,21 @@ class MapFragment : BaseFragment(),
 
     override fun onMarkerClick(marker: Marker): Boolean {
         Toast.makeText(activity, marker.tag.toString(), Toast.LENGTH_SHORT).show()
+        if (location != null)
+            mapViewModel.getRoute(
+                marker.tag as String,
+                LatLng(location!!.latitude, location!!.longitude)
+            )
         return true
+    }
+
+    private fun drawPollyLine(results: DirectionsResult) {
+        if (polyline != null) polyline!!.remove()
+        val decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.encodedPath)
+        val p = PolylineOptions()
+            .addAll(decodedPath)
+            .color(Color.RED)
+        polyline = googleMap.addPolyline(p)
     }
 
     private fun getCurrentLocation() {
@@ -237,6 +264,7 @@ class MapFragment : BaseFragment(),
         }
         getFusedLocationProviderClient(activity as Activity).lastLocation
             .addOnSuccessListener {
+                location = it
                 moveMap(it.latitude, it.longitude)
             }
     }
