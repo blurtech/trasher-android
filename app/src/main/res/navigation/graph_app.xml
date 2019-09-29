@@ -19,6 +19,12 @@
         <action
             android:id="@+id/action_mapFragment_to_qrScannerFragment"
             app:destination="@id/QRlScannerFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_storeFragment"
+            app:destination="@id/storeFragment" />
     </fragment>
 
     <fragment
@@ -73,4 +79,18 @@
             android:name="QRString"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        tools:layout="@layout/fragment_profile"
+        android:name="tech.blur.trasher.presentation.profile.UserProfileFragment"
+        android:label="UserProfileFragment" >
+        <action
+            android:id="@+id/action_userProfileFragment_to_storeFragment"
+            app:destination="@id/storeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_store"
+        android:id="@+id/storeFragment"
+        android:name="tech.blur.trasher.presentation.profile.StoreFragment"
+        android:label="StoreFragment" />
 </navigation>

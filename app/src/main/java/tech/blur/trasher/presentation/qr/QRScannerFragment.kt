@@ -13,6 +13,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView
 import org.koin.android.ext.android.inject
 import tech.blur.trasher.R
 import tech.blur.trasher.UserSession
+import tech.blur.trasher.common.ext.observeNonNull
 import tech.blur.trasher.domain.Parcel
 import tech.blur.trasher.domain.TrashcanInfo
 import tech.blur.trasher.presentation.BaseFragment
@@ -85,22 +86,30 @@ class QRScannerFragment : BaseFragment(), ZXingScannerView.ResultHandler, Suppor
             rawResult.text.contains("parcelId") -> {
                 val result = Gson().fromJson(rawResult.text, Parcel::class.java)
 //                userSession.qrCodeCanData(result)
-                val dialog = AlertDialog.Builder(context!!)
-                dialog.setMessage("Вы отсканировали пакет!")
-                    .setPositiveButton("Ok") { _, _ ->
-                        findNavController().popBackStack()
+                qrScanerViewModel.registerParcelsSubject.onNext(result)
+
+                qrScanerViewModel.registrationResult.observeNonNull(this){
+                    if (it != -1) {
+                        showDialog("$it пакетов добавлено на ваш аккаунт", true)
+                    } else {
+                        showDialog("Этот QR код уже отсканировали", true)
                     }
-                dialog.show()
+                }
+
             }
             else -> {
-                val dialog = AlertDialog.Builder(context!!)
-                dialog.setMessage("Это не похоже на QR код мусорки или пакета")
-                    .setPositiveButton("Ok") { _, _ ->
-                        findNavController().popBackStack()
-                    }
-                dialog.show()
+                showDialog("Это не похоже на QR код мусорки или пакета", true)
             }
         }
+    }
+
+    private fun showDialog(message:String, popBack: Boolean = false){
+        val dialog = AlertDialog.Builder(context!!)
+        dialog.setMessage(message)
+            .setPositiveButton("Ok") { _, _ ->
+                if (popBack) findNavController().popBackStack()
+            }
+        dialog.show()
     }
 
     private fun setupFormats() {

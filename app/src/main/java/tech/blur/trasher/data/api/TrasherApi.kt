@@ -22,5 +22,13 @@ interface TrasherApi {
 
     @POST("litter/")
     @Headers("Authorization: required")
-    fun ejectTrash(@Body ejectTrashRequest: EjectTrashRequest): Single<Trash>
+    fun ejectTrash(@Body ejectTrashRequest: EjectTrashRequest): Single<Wrapper<Trash>>
+
+    @POST("qr/scan")
+    @Headers("Authorization: required")
+    fun registeParcels(@Body parcel: Parcel): Single<Wrapper<Int>>
+
+    @GET("user")
+    @Headers("Authorization: required")
+    fun getProfile(): Single<Wrapper<User>>
 }

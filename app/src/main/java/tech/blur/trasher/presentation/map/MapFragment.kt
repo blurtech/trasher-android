@@ -183,7 +183,7 @@ class MapFragment : BaseFragment(),
         }
     }
 
-    fun getBitmap(@DrawableRes drawableRes: Int): Bitmap {
+    private fun getBitmap(@DrawableRes drawableRes: Int): Bitmap {
         val drawable = resources.getDrawable(drawableRes)
         val canvas = Canvas()
         val bitmap = Bitmap.createBitmap(

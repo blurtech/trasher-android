@@ -13,6 +13,7 @@ import tech.blur.trasher.presentation.MainActivityViewModel
 import tech.blur.trasher.presentation.auth.LoginViewModel
 import tech.blur.trasher.presentation.auth.RegistrationViewModel
 import tech.blur.trasher.presentation.map.MapViewModel
+import tech.blur.trasher.presentation.profile.UserProfileViewModel
 import tech.blur.trasher.presentation.qr.QRScanerViewModel
 import tech.blur.trasher.presentation.trashEjection.TrashEjectionViewModel
 
@@ -39,6 +40,7 @@ private var appModule = module {
     single { UserSession() }
 
     viewModel { TrashEjectionViewModel(get(), get(), get()) }
+    viewModel { UserProfileViewModel(get(), get(), get()) }
     viewModel { QRScanerViewModel(get(), get()) }
     viewModel { MainActivityViewModel(get()) }
     viewModel { MapViewModel(get(), get(), get()) }

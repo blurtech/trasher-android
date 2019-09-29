@@ -69,12 +69,11 @@ class MainActivity : AppCompatActivity() {
                             navHost_mainActivity.findNavController().navigate(R.id.mapFragment)
                         }
                         R.id.nav_profile -> {
-//                        navHost_mainActivity.findNavController().navigate(R.id.)
+                        navHost_mainActivity.findNavController().navigate(R.id.action_mapFragment_to_userProfileFragment)
 
                         }
                         R.id.nav_bonus -> {
-//                            navHost_mainActivity.findNavController().navigate(R.id.)
-
+                            navHost_mainActivity.findNavController().navigate(R.id.action_mapFragment_to_storeFragment)
                         }
                         R.id.nav_about -> {
 //                        navHost_mainActivity.findNavController().navigate(R.id.)

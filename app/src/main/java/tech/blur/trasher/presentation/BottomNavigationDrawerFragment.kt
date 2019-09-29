@@ -29,19 +29,19 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
                 }
                 R.id.nav_profile -> {
                     if (currentItem != R.id.nav_profile) {
-//                        findNavController().navigate(R.id.)
-//                        currentItem = R.id.nav_profile
+                        onItemCliked?.invoke(R.id.nav_profile)
+                        currentItem = R.id.nav_profile
                     }
                 }
                 R.id.nav_bonus -> {
                     if (currentItem != R.id.nav_bonus) {
-//                        findNavController().navigate(R.id.)
-//                        currentItem = R.id.nav_bonus
+                        onItemCliked?.invoke(R.id.nav_bonus)
+                        currentItem = R.id.nav_bonus
                     }
                 }
                 R.id.nav_about -> {
                     if (currentItem != R.id.nav_about) {
-//                        findNavController().navigate(R.id.)
+//                        onItemCliked?.invoke(R.id.nav_about)
 //                        currentItem = R.id.nav_about
                     }
                 }

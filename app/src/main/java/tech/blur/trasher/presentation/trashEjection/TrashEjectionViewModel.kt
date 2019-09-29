@@ -2,7 +2,6 @@ package tech.blur.trasher.presentation.trashEjection
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.withLatestFrom
@@ -14,11 +13,11 @@ import tech.blur.trasher.common.toResult
 import tech.blur.trasher.data.api.TrasherApi
 import tech.blur.trasher.domain.Count
 import tech.blur.trasher.domain.EjectTrashRequest
-import tech.blur.trasher.domain.TrashcanInfo
 import tech.blur.trasher.domain.TrashcanType
 import tech.blur.trasher.presentation.BaseViewModel
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class TrashEjectionViewModel(
     userSession: UserSession,
@@ -41,13 +40,18 @@ class TrashEjectionViewModel(
     val canType: LiveData<String> = mutableCanType
 
 
-    var trashType: String = ""
+    var trashType: String by Delegates.observable("") { _, _, newValue ->
+        mutableCanType.value = newValue
+    }
 
     init {
         ejectTrash
             .withLatestFrom(userSession.qrCodeCanDataObservable())
             .flatMapSingle {
                 val types = ArrayList<Count>()
+                trashType =
+                    TrashcanType.values()[it.second.canType].name.toLowerCase(Locale.getDefault())
+                        .capitalize()
                 types.add(Count(it.second.canType, -1, it.first))
                 Single.just(EjectTrashRequest(it.second.id, types))
             }
@@ -69,6 +73,7 @@ class TrashEjectionViewModel(
             }.addTo(compositeDisposable)
 
         userSession.qrCodeCanDataObservable()
+            .observeOn(schedulerProvider.ui())
             .subscribe {
                 trashType = TrashcanType.values()[it.canType].name.toLowerCase(Locale.getDefault())
                     .capitalize()

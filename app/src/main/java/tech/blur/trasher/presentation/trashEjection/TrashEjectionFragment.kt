@@ -66,7 +66,6 @@ class TrashEjectionFragment : BaseFragment(), SupportNavigationHide {
             binding.textViewEjectTrashCanType.text = it
         }
 
-
         trashEjectionViewModel.errorMessage.observeNonNull(this) {
             val dialog = AlertDialog.Builder(context!!)
             dialog.setMessage(it)
