@@ -21,7 +21,7 @@ data class TrashcanInfo(
     val id: String
 )
 
-enum class TrashcanType(id: Int){
+enum class TrashcanType(id: Int) {
     PAPER(1),
     GLASS(2),
     PLASTIC(3),
@@ -32,7 +32,14 @@ enum class TrashcanType(id: Int){
     BATTARIES(8),
     BULBS(9),
     TECHNIC(10),
-    TETRA(11)
+    TETRA(11);
+
+    fun isOther(): Boolean {
+        return when(this) {
+            PAPER, GLASS, PLASTIC, DANGER -> true
+            else -> false
+        }
+    }
 }
 
 data class req(

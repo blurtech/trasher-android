@@ -139,26 +139,24 @@ class MapFragment : BaseFragment(),
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
-//        configureBackdrop()
+        configureBackdrop()
     }
 
-//    private fun configureBackdrop() {
-//        // Get the fragment reference
-//        val fragment = childFragmentManager.findFragmentById(R.id.fragment_statistic_Home)
-//
-//        fragment?.let {
-//            // Get the BottomSheetBehavior from the fragment view
-//            BottomSheetBehavior.from(it.view)?.let { bsb ->
-//                // Set the initial state of the BottomSheetBehavior to HIDDEN
-//                bsb.state = BottomSheetBehavior.PEEK_HEIGHT_AUTO
-//
-//                // Set the reference into class attribute (will be used latter)
-//                mBottomSheetBehavior = bsb
-//            }
-//        }
-//    }
+    private fun configureBackdrop() {
+
+        val fragment = childFragmentManager.findFragmentById(R.id.fragment_trashcanInfo)
+
+        fragment?.let {
+
+            BottomSheetBehavior.from(it.view)?.let { bsb ->
+
+                bsb.state = BottomSheetBehavior.STATE_HIDDEN
+
+                mBottomSheetBehavior = bsb
+            }
+        }
+    }
+
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
@@ -193,6 +191,7 @@ class MapFragment : BaseFragment(),
 
     private fun paintMarkers() {
         mapViewModel.trashcans.observe(this) { list ->
+            googleMap.clear()
             list?.map {
                 googleMap.addMarker(
                     MarkerOptions().apply {
@@ -232,6 +231,7 @@ class MapFragment : BaseFragment(),
                 marker.tag as String,
                 LatLng(location!!.latitude, location!!.longitude)
             )
+        mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         return true
     }
 

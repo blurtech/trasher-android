@@ -75,7 +75,7 @@ class TrashEjectionViewModel(
         userSession.qrCodeCanDataObservable()
             .observeOn(schedulerProvider.ui())
             .subscribe {
-                trashType = TrashcanType.values()[it.canType].name.toLowerCase(Locale.getDefault())
+                trashType = TrashcanType.values()[it.canType - 1].name.toLowerCase(Locale.getDefault())
                     .capitalize()
                 mutableCanType.value = trashType
             }.addTo(compositeDisposable)
