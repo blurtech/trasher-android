@@ -140,6 +140,15 @@ class MapFragment : BaseFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         configureBackdrop()
+        userSession.pathClickedObservable()
+            .observeOn(schedulerProvider.ui())
+            .subscribe{
+                if (location != null)
+                    mapViewModel.getRoute(
+                        it,
+                        LatLng(location!!.latitude, location!!.longitude)
+                    )
+            }.addTo(compositeDisposable)
     }
 
     private fun configureBackdrop() {
@@ -202,7 +211,7 @@ class MapFragment : BaseFragment(),
                             BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_map_point))
                         )
                         draggable(false)
-                        title("мусорка") //it.name
+                        title(it.title) //it.name
                     }
                 ).tag = it.id
             }
@@ -225,13 +234,8 @@ class MapFragment : BaseFragment(),
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        Toast.makeText(activity, marker.tag.toString(), Toast.LENGTH_SHORT).show()
-        if (location != null)
-            mapViewModel.getRoute(
-                marker.tag as String,
-                LatLng(location!!.latitude, location!!.longitude)
-            )
         mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        userSession.trashcanClicked(marker.tag as String)
         return true
     }
 

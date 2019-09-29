@@ -8,7 +8,8 @@ data class Trashcan(
     val id: String,
     val place: Place,
     val lastCollect: String,
-    val latlng: LatLng
+    val latlng: LatLng,
+    val title: String
 
 )
 

@@ -83,10 +83,8 @@ class MapViewModel(
         }
     }
 
-    fun getRoute(trashcanId: String, origin: LatLng) {
+    fun getRoute(trashcan: Trashcan, origin: LatLng) {
         val apiRequest = DirectionsApi.newRequest(geoApiContext)
-
-        val trashcan = trashRepository.trashCans.list.find { it.id == trashcanId }
 
         apiRequest.origin(com.google.maps.model.LatLng(origin.latitude, origin.longitude))
         apiRequest.destination(
