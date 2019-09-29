@@ -18,6 +18,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
@@ -166,7 +167,7 @@ class MapFragment : BaseFragment(),
         val permList =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET)
 
-        ActivityCompat.requestPermissions(activity!!, permList, 1) //TODO Wait for permissions
+        requestPermissions(permList, 1)
 
         if (ContextCompat.checkSelfPermission(
                 activity!!,
