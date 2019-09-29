@@ -7,10 +7,10 @@ import tech.blur.trasher.domain.*
 interface TrasherApi {
 
     @POST("user")
-    fun login(@Body loginRequest: LoginRequest): Single<Wrapper<User>>
+    fun login(@Body loginRequest: LoginRequest): Single<Wrapper<LoginResponse>>
 
     @POST("user/register")
-    fun register(@Body registerRequest: RegisterRequest): Single<Wrapper<User>>
+    fun register(@Body registerRequest: RegisterRequest): Single<Wrapper<LoginResponse>>
 
     @GET("litterstorage/")
     @Headers("Authorization: required")

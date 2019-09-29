@@ -61,7 +61,7 @@ class LoginViewModel(
             }
             .flatMapSingle {
                 if (it is Result.Success) {
-                    accountRepository.authorizeUser(it.data.data, Token(it.data.data.token))
+                    accountRepository.authorizeUser(it.data.data.user, it.data.data.getToken())
                 }
                 Single.just(it)
             }

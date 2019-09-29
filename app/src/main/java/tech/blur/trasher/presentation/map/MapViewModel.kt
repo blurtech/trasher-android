@@ -2,6 +2,13 @@ package tech.blur.trasher.presentation.map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.common.api.PendingResult
+import com.google.android.gms.common.api.PendingResults
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.DirectionsApi
+import com.google.maps.GeoApiContext
+import com.google.maps.model.DirectionsResult
+import com.google.maps.model.TravelMode
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
@@ -18,10 +25,14 @@ import tech.blur.trasher.presentation.BaseViewModel
 class MapViewModel(
     api: TrasherApi,
     schedulerProvider: SchedulerProvider,
-    private val trashRepository: TrashRepository
+    private val trashRepository: TrashRepository,
+    private val geoApiContext: GeoApiContext
 ) : BaseViewModel() {
 
     private val loadTrashcans = PublishSubject.create<Unit>()
+
+    private val mutableRoute = MutableLiveData<DirectionsResult?>()
+    val route: LiveData<DirectionsResult?> = mutableRoute
 
     private val mutableNetworkProgress = MutableLiveData<Boolean>()
     val networkProgress: LiveData<Boolean> = mutableNetworkProgress
@@ -70,6 +81,32 @@ class MapViewModel(
         } else {
             loadTrashcans.onNext(Unit)
         }
+    }
+
+    fun getRoute(trashcanId: String, origin: LatLng) {
+        val apiRequest = DirectionsApi.newRequest(geoApiContext)
+
+        val trashcan = trashRepository.trashCans.list.find { it.id == trashcanId }
+
+        apiRequest.origin(com.google.maps.model.LatLng(origin.latitude, origin.longitude))
+        apiRequest.destination(
+            com.google.maps.model.LatLng(
+                trashcan!!.latlng.latitude,
+                trashcan.latlng.longitude
+            )
+        )
+        apiRequest.mode(TravelMode.WALKING)
+
+        apiRequest.setCallback(object : com.google.maps.PendingResult.Callback<DirectionsResult> {
+            override fun onFailure(e: Throwable?) {
+                e!!.printStackTrace()
+            }
+
+            override fun onResult(result: DirectionsResult?) {
+                mutableRoute.postValue(result)
+            }
+
+        })
     }
 
 

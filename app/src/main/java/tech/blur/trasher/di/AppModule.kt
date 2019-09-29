@@ -1,6 +1,7 @@
 package tech.blur.trasher.di
 
 import android.content.Context
+import com.google.maps.GeoApiContext
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -37,13 +38,19 @@ private var appModule = module {
         )
     }
 
+    single {
+        GeoApiContext.Builder()
+            .apiKey("AIzaSyDVsJx-Hyq6w4laps9vUcA1gbq-mWLtH78")
+            .build()
+    }
+
     single { UserSession() }
 
     viewModel { TrashEjectionViewModel(get(), get(), get()) }
     viewModel { UserProfileViewModel(get(), get(), get()) }
     viewModel { QRScanerViewModel(get(), get()) }
     viewModel { MainActivityViewModel(get()) }
-    viewModel { MapViewModel(get(), get(), get()) }
+    viewModel { MapViewModel(get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get()) }
     viewModel { RegistrationViewModel(get(), get(), get()) }
 
