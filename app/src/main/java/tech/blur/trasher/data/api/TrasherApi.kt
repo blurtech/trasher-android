@@ -31,4 +31,8 @@ interface TrasherApi {
     @GET("user")
     @Headers("Authorization: required")
     fun getProfile(): Single<Wrapper<User>>
+
+    @GET("game/mapreduce")
+    @Headers("Authorization: required")
+    fun getStatistic(): Single<Wrapper<ArrayList<Statistic>>>
 }

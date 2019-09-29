@@ -22,7 +22,7 @@ data class TrashcanInfo(
 )
 
 enum class TrashcanType(id: Int){
-    PAPAER(1),
+    PAPER(1),
     GLASS(2),
     PLASTIC(3),
     METAL(4),
