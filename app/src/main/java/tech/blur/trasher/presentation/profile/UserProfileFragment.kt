@@ -103,7 +103,7 @@ class UserProfileFragment : BaseFragment(), SupportNavigationHide {
             when (it.find { morphToType(it.type - 1).isOther() }?.value?.total) {
                 in 1..50 -> R.drawable.ic_food1
                 in 50..100 -> R.drawable.ic_food2
-                null -> R.drawable.ic_transparent
+                null, 0 -> R.drawable.ic_transparent
                 else -> R.drawable.ic_food3
             }
         val layer2Res: Int =

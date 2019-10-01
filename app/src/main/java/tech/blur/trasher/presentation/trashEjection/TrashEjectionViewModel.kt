@@ -49,9 +49,6 @@ class TrashEjectionViewModel(
             .withLatestFrom(userSession.qrCodeCanDataObservable())
             .flatMapSingle {
                 val types = ArrayList<Count>()
-                trashType =
-                    TrashcanType.values()[it.second.canType].name.toLowerCase(Locale.getDefault())
-                        .capitalize()
                 types.add(Count(it.second.canType, -1, it.first))
                 Single.just(EjectTrashRequest(it.second.id, types))
             }

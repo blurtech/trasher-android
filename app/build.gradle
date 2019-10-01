@@ -7,6 +7,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    signingConfigs {
+        Trasher {
+            storeFile file('C:\\Users\\srggr\\keystores\\trasher.jks')
+            storePassword 'icomtvedX6'
+            keyAlias = 'Trasher'
+            keyPassword 'icomtvedX6'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
